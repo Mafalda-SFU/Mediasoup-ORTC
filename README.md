@@ -1,2 +1,3 @@
 # ORTC-canConsume
-canConsume canConsume() function extracted from Mediasoup
+
+canConsume() function extracted from Mediasoup

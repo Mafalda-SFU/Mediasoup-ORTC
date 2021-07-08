@@ -1,0 +1,33 @@
+{
+  "name": "ortc-canconsume",
+  "version": "0.0.0",
+  "description": "canConsume() function extracted from Mediasoup",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mafalda-SFU/ORTC-canConsume.git"
+  },
+  "keywords": [
+    "Mediasoup",
+    "Mafalda",
+    "SFU",
+    "ORTC",
+    "ObjectRTC",
+    "consumer"
+  ],
+  "author": "Jesús Leganés-Combarro 'piranna' <piranna@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mafalda-SFU/ORTC-canConsume/issues"
+  },
+  "homepage": "https://github.com/Mafalda-SFU/ORTC-canConsume#readme",
+  "dependencies": {
+    "h264-profile-level-id": "^1.0.1",
+    "typescript": "^4.3.5"
+  }
+}
