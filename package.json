@@ -2,7 +2,7 @@
   "name": "ortc-canconsume",
   "version": "0.0.0",
   "description": "canConsume() function extracted from Mediasoup",
-  "main": "index.js",
+  "main": "lib/ortc.js",
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
