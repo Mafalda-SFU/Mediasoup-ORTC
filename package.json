@@ -1,5 +1,5 @@
 {
-  "name": "ortc-canconsume",
+  "name": "@mafalda/ortc-canconsume",
   "version": "0.0.0",
   "description": "canConsume() function extracted from Mediasoup",
   "main": "lib/ortc.js",
