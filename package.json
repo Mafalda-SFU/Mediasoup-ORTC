@@ -1,6 +1,6 @@
 {
   "name": "@mafalda-sfu/ortc-canconsume",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "canConsume() function extracted from Mediasoup",
   "main": "lib/ortc.js",
   "scripts": {
