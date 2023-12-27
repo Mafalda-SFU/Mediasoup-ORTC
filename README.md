@@ -1,3 +1,3 @@
-# ORTC-canConsume
+# Mediasoup ORTC
 
-canConsume() function extracted from Mediasoup
+ORTC helper functions extracted from Mediasoup

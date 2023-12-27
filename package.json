@@ -1,7 +1,7 @@
 {
-  "name": "@mafalda-sfu/ortc-canconsume",
+  "name": "@mafalda-sfu/mediasoup-ortc",
   "version": "0.0.1",
-  "description": "canConsume() function extracted from Mediasoup",
+  "description": "ORTC helper functions extracted from Mediasoup",
   "main": "lib/ortc.js",
   "scripts": {
     "build": "tsc",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mafalda-SFU/ORTC-canConsume.git"
+    "url": "git+https://github.com/Mafalda-SFU/Mediasoup-ORTC.git"
   },
   "keywords": [
     "Mediasoup",
@@ -23,9 +23,9 @@
   "author": "Jesús Leganés-Combarro 'piranna' <piranna@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Mafalda-SFU/ORTC-canConsume/issues"
+    "url": "https://github.com/Mafalda-SFU/Mediasoup-ORTC/issues"
   },
-  "homepage": "https://github.com/Mafalda-SFU/ORTC-canConsume#readme",
+  "homepage": "https://mafalda.io/Mediasoup-ORTC",
   "dependencies": {
     "h264-profile-level-id": "^1.0.1"
   },
