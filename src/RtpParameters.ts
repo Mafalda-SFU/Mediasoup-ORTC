@@ -2,166 +2,160 @@
  * The RTP capabilities define what mediasoup or an endpoint can receive at
  * media level.
  */
- export type RtpCapabilities =
- {
-	 /**
-		* Supported media and RTX codecs.
-		*/
-	 codecs?: RtpCodecCapability[];
+export type RtpCapabilities =
+{
+	/**
+	 * Supported media and RTX codecs.
+	 */
+	codecs?: RtpCodecCapability[];
 
-	 /**
-		* Supported RTP header extensions.
-		*/
-	 headerExtensions?: RtpHeaderExtension[];
+	/**
+	 * Supported RTP header extensions.
+	 */
+	headerExtensions?: RtpHeaderExtension[];
+};
 
-	 /**
-		* Supported FEC mechanisms.
-		*/
-	 fecMechanisms?: string[];
- }
+/**
+ * Media kind ('audio' or 'video').
+ */
+export type MediaKind = 'audio' | 'video';
 
- /**
-	* Media kind ('audio' or 'video').
-	*/
- export type MediaKind = 'audio' | 'video';
+/**
+ * Provides information on the capabilities of a codec within the RTP
+ * capabilities. The list of media codecs supported by mediasoup and their
+ * settings is defined in the supportedRtpCapabilities.ts file.
+ *
+ * Exactly one RtpCodecCapability will be present for each supported combination
+ * of parameters that requires a distinct value of preferredPayloadType. For
+ * example:
+ *
+ * - Multiple H264 codecs, each with their own distinct 'packetization-mode' and
+ *   'profile-level-id' values.
+ * - Multiple VP9 codecs, each with their own distinct 'profile-id' value.
+ *
+ * RtpCodecCapability entries in the mediaCodecs array of RouterOptions do not
+ * require preferredPayloadType field (if unset, mediasoup will choose a random
+ * one). If given, make sure it's in the 96-127 range.
+ */
+export type RtpCodecCapability =
+{
+	/**
+	 * Media kind.
+	 */
+	kind: MediaKind;
 
- /**
-	* Provides information on the capabilities of a codec within the RTP
-	* capabilities. The list of media codecs supported by mediasoup and their
-	* settings is defined in the supportedRtpCapabilities.ts file.
-	*
-	* Exactly one RtpCodecCapability will be present for each supported combination
-	* of parameters that requires a distinct value of preferredPayloadType. For
-	* example:
-	*
-	* - Multiple H264 codecs, each with their own distinct 'packetization-mode' and
-	*	 'profile-level-id' values.
-	* - Multiple VP9 codecs, each with their own distinct 'profile-id' value.
-	*
-	* RtpCodecCapability entries in the mediaCodecs array of RouterOptions do not
-	* require preferredPayloadType field (if unset, mediasoup will choose a random
-	* one). If given, make sure it's in the 96-127 range.
-	*/
- export type RtpCodecCapability =
- {
-	 /**
-		* Media kind.
-		*/
-	 kind: MediaKind;
+	/**
+	 * The codec MIME media type/subtype (e.g. 'audio/opus', 'video/VP8').
+	 */
+	mimeType: string;
 
-	 /**
-		* The codec MIME media type/subtype (e.g. 'audio/opus', 'video/VP8').
-		*/
-	 mimeType: string;
+	/**
+	 * The preferred RTP payload type.
+	 */
+	preferredPayloadType?: number;
 
-	 /**
-		* The preferred RTP payload type.
-		*/
-	 preferredPayloadType?: number;
+	/**
+	 * Codec clock rate expressed in Hertz.
+	 */
+	clockRate: number;
 
-	 /**
-		* Codec clock rate expressed in Hertz.
-		*/
-	 clockRate: number;
+	/**
+	 * The number of channels supported (e.g. two for stereo). Just for audio.
+	 * Default 1.
+	 */
+	channels?: number;
 
-	 /**
-		* The number of channels supported (e.g. two for stereo). Just for audio.
-		* Default 1.
-		*/
-	 channels?: number;
+	/**
+	 * Codec specific parameters. Some parameters (such as 'packetization-mode'
+	 * and 'profile-level-id' in H264 or 'profile-id' in VP9) are critical for
+	 * codec matching.
+	 */
+	parameters?: any;
 
-	 /**
-		* Codec specific parameters. Some parameters (such as 'packetization-mode'
-		* and 'profile-level-id' in H264 or 'profile-id' in VP9) are critical for
-		* codec matching.
-		*/
-	 parameters?: any;
+	/**
+	 * Transport layer and codec-specific feedback messages for this codec.
+	 */
+	rtcpFeedback?: RtcpFeedback[];
+};
 
-	 /**
-		* Transport layer and codec-specific feedback messages for this codec.
-		*/
-	 rtcpFeedback?: RtcpFeedback[];
- }
+/**
+ * Direction of RTP header extension.
+ */
+export type RtpHeaderExtensionDirection = 'sendrecv' | 'sendonly' | 'recvonly' | 'inactive';
 
- /**
-	* Direction of RTP header extension.
-	*/
- export type RtpHeaderExtensionDirection = 'sendrecv' | 'sendonly' | 'recvonly' | 'inactive';
+/**
+ * Provides information relating to supported header extensions. The list of
+ * RTP header extensions supported by mediasoup is defined in the
+ * supportedRtpCapabilities.ts file.
+ *
+ * mediasoup does not currently support encrypted RTP header extensions. The
+ * direction field is just present in mediasoup RTP capabilities (retrieved via
+ * router.rtpCapabilities or mediasoup.getSupportedRtpCapabilities()). It's
+ * ignored if present in endpoints' RTP capabilities.
+ */
+export type RtpHeaderExtension =
+{
+	/**
+	 * Media kind.
+	 */
+	kind: MediaKind;
 
- /**
-	* Provides information relating to supported header extensions. The list of
-	* RTP header extensions supported by mediasoup is defined in the
-	* supportedRtpCapabilities.ts file.
-	*
-	* mediasoup does not currently support encrypted RTP header extensions. The
-	* direction field is just present in mediasoup RTP capabilities (retrieved via
-	* router.rtpCapabilities or mediasoup.getSupportedRtpCapabilities()). It's
-	* ignored if present in endpoints' RTP capabilities.
-	*/
- export type RtpHeaderExtension =
- {
-	 /**
-		* Media kind. If empty string, it's valid for all kinds.
-		* Default any media kind.
-		*/
-	 kind?: MediaKind | '';
+	/*
+	 * The URI of the RTP header extension, as defined in RFC 5285.
+	 */
+	uri: string;
 
-	 /*
-		* The URI of the RTP header extension, as defined in RFC 5285.
-		*/
-	 uri: string;
+	/**
+	 * The preferred numeric identifier that goes in the RTP packet. Must be
+	 * unique.
+	 */
+	preferredId: number;
 
-	 /**
-		* The preferred numeric identifier that goes in the RTP packet. Must be
-		* unique.
-		*/
-	 preferredId: number;
+	/**
+	 * If true, it is preferred that the value in the header be encrypted as per
+	 * RFC 6904. Default false.
+	 */
+	preferredEncrypt?: boolean;
 
-	 /**
-		* If true, it is preferred that the value in the header be encrypted as per
-		* RFC 6904. Default false.
-		*/
-	 preferredEncrypt?: boolean;
+	/**
+	 * If 'sendrecv', mediasoup supports sending and receiving this RTP extension.
+	 * 'sendonly' means that mediasoup can send (but not receive) it. 'recvonly'
+	 * means that mediasoup can receive (but not send) it.
+	 */
+	direction?: RtpHeaderExtensionDirection;
+};
 
-	 /**
-		* If 'sendrecv', mediasoup supports sending and receiving this RTP extension.
-		* 'sendonly' means that mediasoup can send (but not receive) it. 'recvonly'
-		* means that mediasoup can receive (but not send) it.
-		*/
-	 direction?: RtpHeaderExtensionDirection;
- }
-
- /**
-	* The RTP send parameters describe a media stream received by mediasoup from
-	* an endpoint through its corresponding mediasoup Producer. These parameters
-	* may include a mid value that the mediasoup transport will use to match
-	* received RTP packets based on their MID RTP extension value.
-	*
-	* mediasoup allows RTP send parameters with a single encoding and with multiple
-	* encodings (simulcast). In the latter case, each entry in the encodings array
-	* must include a ssrc field or a rid field (the RID RTP extension value). Check
-	* the Simulcast and SVC sections for more information.
-	*
-	* The RTP receive parameters describe a media stream as sent by mediasoup to
-	* an endpoint through its corresponding mediasoup Consumer. The mid value is
-	* unset (mediasoup does not include the MID RTP extension into RTP packets
-	* being sent to endpoints).
-	*
-	* There is a single entry in the encodings array (even if the corresponding
-	* producer uses simulcast). The consumer sends a single and continuous RTP
-	* stream to the endpoint and spatial/temporal layer selection is possible via
-	* consumer.setPreferredLayers().
-	*
-	* As an exception, previous bullet is not true when consuming a stream over a
-	* PipeTransport, in which all RTP streams from the associated producer are
-	* forwarded verbatim through the consumer.
-	*
-	* The RTP receive parameters will always have their ssrc values randomly
-	* generated for all of its	encodings (and optional rtx: { ssrc: XXXX } if the
-	* endpoint supports RTX), regardless of the original RTP send parameters in
-	* the associated producer. This applies even if the producer's encodings have
-	* rid set.
-	*/
+/**
+ * The RTP send parameters describe a media stream received by mediasoup from
+ * an endpoint through its corresponding mediasoup Producer. These parameters
+ * may include a mid value that the mediasoup transport will use to match
+ * received RTP packets based on their MID RTP extension value.
+ *
+ * mediasoup allows RTP send parameters with a single encoding and with multiple
+ * encodings (simulcast). In the latter case, each entry in the encodings array
+ * must include a ssrc field or a rid field (the RID RTP extension value). Check
+ * the Simulcast and SVC sections for more information.
+ *
+ * The RTP receive parameters describe a media stream as sent by mediasoup to
+ * an endpoint through its corresponding mediasoup Consumer. The mid value is
+ * unset (mediasoup does not include the MID RTP extension into RTP packets
+ * being sent to endpoints).
+ *
+ * There is a single entry in the encodings array (even if the corresponding
+ * producer uses simulcast). The consumer sends a single and continuous RTP
+ * stream to the endpoint and spatial/temporal layer selection is possible via
+ * consumer.setPreferredLayers().
+ *
+ * As an exception, previous bullet is not true when consuming a stream over a
+ * PipeTransport, in which all RTP streams from the associated producer are
+ * forwarded verbatim through the consumer.
+ *
+ * The RTP receive parameters will always have their ssrc values randomly
+ * generated for all of its  encodings (and optional rtx: { ssrc: XXXX } if the
+ * endpoint supports RTX), regardless of the original RTP send parameters in
+ * the associated producer. This applies even if the producer's encodings have
+ * rid set.
+ */
 export type RtpParameters =
 {
 	/**
@@ -188,7 +182,7 @@ export type RtpParameters =
 	 * Parameters used for RTCP.
 	 */
 	rtcp?: RtcpParameters;
-}
+};
 
 /**
  * Provides information on codec settings within the RTP parameters. The list
@@ -229,7 +223,7 @@ export type RtpCodecParameters =
 	 * Transport layer and codec-specific feedback messages for this codec.
 	 */
 	rtcpFeedback?: RtcpFeedback[];
-}
+};
 
 /**
  * Provides information on RTCP feedback messages for a specific codec. Those
@@ -248,7 +242,7 @@ export type RtcpFeedback =
 	 * RTCP feedback parameter.
 	 */
 	parameter?: string;
-}
+};
 
 /**
  * Provides information relating to an encoding, which represents a media RTP
@@ -297,7 +291,7 @@ export type RtpEncodingParameters =
 	 */
 	scaleResolutionDownBy?: number;
 	maxBitrate?: number;
-}
+};
 
 /**
  * Defines a RTP header extension within the RTP parameters. The list of RTP
@@ -328,7 +322,7 @@ export type RtpHeaderExtensionParameters =
 	 * Configuration parameters for the header extension.
 	 */
 	parameters?: any;
-}
+};
 
 /**
  * Provides information on RTCP settings within the RTP parameters.
@@ -356,4 +350,4 @@ export type RtcpParameters =
 	 * Whether RTCP-mux is used. Default true.
 	 */
 	mux?: boolean;
-}
+};
