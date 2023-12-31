@@ -30,7 +30,7 @@
     "h264-profile-level-id": "^2.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.8.7",
-    "typescript": "^5.2.2"
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
   }
 }
