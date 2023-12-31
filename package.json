@@ -1,6 +1,6 @@
 {
   "name": "@mafalda-sfu/mediasoup-ortc",
-  "version": "3.13.13",
+  "version": "3.13.14-0",
   "description": "ORTC helper functions extracted from Mediasoup",
   "main": "lib/ortc.js",
   "scripts": {
