@@ -1,32 +1,34 @@
-import { randomInt } from 'crypto';
+import { randomInt } from 'node:crypto';
+
 
 /**
- * Clones the given object/array.
+ * Clones the given value.
  */
-export function clone(data: any): any
+export function clone<T>(value: T): T
 {
-	if (typeof data !== 'object')
+	if (value === undefined)
 	{
-		return {};
+		return undefined as unknown as T;
 	}
-
-	return JSON.parse(JSON.stringify(data));
+	else if (Number.isNaN(value))
+	{
+		return NaN as unknown as T;
+	}
+	else if (typeof structuredClone === 'function')
+	{
+		// Available in Node >= 18.
+		return structuredClone(value);
+	}
+	else
+	{
+		return JSON.parse(JSON.stringify(value));
+	}
 }
 
 /**
  * Generates a random positive integer.
  */
-export function generateRandomNumber()
+export function generateRandomNumber(): number
 {
 	return randomInt(100_000_000, 999_999_999);
 }
-
-type Only<T, U> =
-{
-	[P in keyof T]: T[P];
-} &
-{
-	[P in keyof U]?: never;
-};
-
-export type Either<T, U> = Only<T, U> | Only<U, T>;

@@ -257,8 +257,6 @@ export function validateRtpHeaderExtension(ext: RtpHeaderExtension): void
 /**
  * Generate RTP capabilities for the Router based on the given media codecs and
  * mediasoup supported RTP capabilities.
- *
- * @param mediaCodecs
  */
 export function generateRouterRtpCapabilities(
 	mediaCodecs: RtpCodecCapability[] = []
@@ -382,9 +380,6 @@ export function generateRouterRtpCapabilities(
  * parameters as values expected by the Router.
  *
  * It may throw if invalid or non supported RTP parameters are given.
- *
- * @param params
- * @param caps
  */
 export function getProducerRtpParametersMapping(
 	params: RtpParameters,
@@ -499,11 +494,6 @@ export function getProducerRtpParametersMapping(
 /**
  * Generate RTP parameters to be internally used by Consumers given the RTP
  * parameters of a Producer and the RTP capabilities of the Router.
- *
- * @param kind
- * @param params
- * @param caps
- * @param rtpMapping
  */
 export function getConsumableRtpParameters(
 	kind: string,
@@ -591,7 +581,8 @@ export function getConsumableRtpParameters(
 	}
 
 	// Clone Producer encodings since we'll mangle them.
-	const consumableEncodings = utils.clone(params.encodings) as RtpEncodingParameters[];
+	const consumableEncodings =
+		(utils.clone(params.encodings) ?? []) as RtpEncodingParameters[];
 
 	for (let i = 0; i < consumableEncodings.length; ++i)
 	{
@@ -612,8 +603,7 @@ export function getConsumableRtpParameters(
 	consumableParams.rtcp =
 	{
 		cname       : params.rtcp!.cname,
-		reducedSize : true,
-		mux         : true
+		reducedSize : true
 	};
 
 	return consumableParams;
@@ -659,10 +649,6 @@ export function canConsume(
  *
  * It keeps all original consumable encodings and removes support for BWE. If
  * enableRtx is false, it also removes RTX and NACK support.
- *
- * @param root0
- * @param root0.consumableRtpParameters
- * @param root0.enableRtx
  */
 export function getPipeConsumerRtpParameters(
 	{
@@ -684,7 +670,7 @@ export function getPipeConsumerRtpParameters(
 	};
 
 	const consumableCodecs =
-		utils.clone(consumableRtpParameters.codecs) as RtpCodecParameters[];
+		(utils.clone(consumableRtpParameters.codecs) ?? []) as RtpCodecParameters[];
 
 	for (const codec of consumableCodecs)
 	{
@@ -712,7 +698,7 @@ export function getPipeConsumerRtpParameters(
 		));
 
 	const consumableEncodings =
-		utils.clone(consumableRtpParameters.encodings) as RtpEncodingParameters[];
+		(utils.clone(consumableRtpParameters.encodings) ?? []) as RtpEncodingParameters[];
 	const baseSsrc = utils.generateRandomNumber();
 	const baseRtxSsrc = utils.generateRandomNumber();
 
@@ -813,7 +799,9 @@ function matchCodecs(
 				try
 				{
 					selectedProfileLevelId =
-						h264.generateProfileLevelIdForAnswer(aCodec.parameters, bCodec.parameters);
+						h264.generateProfileLevelIdStringForAnswer(
+							aCodec.parameters, bCodec.parameters
+						);
 				}
 				catch (error)
 				{
