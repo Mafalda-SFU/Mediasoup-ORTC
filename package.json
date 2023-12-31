@@ -27,6 +27,7 @@
   },
   "homepage": "https://mafalda.io/Mediasoup-ORTC",
   "dependencies": {
+    "@mafalda-sfu/scalabilitymodes": "^0.0.1",
     "h264-profile-level-id": "^2.0.0"
   },
   "devDependencies": {

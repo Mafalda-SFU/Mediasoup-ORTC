@@ -1,6 +1,7 @@
 import * as h264 from 'h264-profile-level-id';
 import * as utils from './utils';
 import { supportedRtpCapabilities } from './supportedRtpCapabilities';
+import { parse as parseScalabilityMode } from '@mafalda-sfu/scalabilitymodes';
 import {
 	RtpCapabilities,
 	MediaKind,
@@ -642,6 +643,223 @@ export function canConsume(
 	}
 
 	return true;
+}
+
+/**
+ * Generate RTP parameters for a specific Consumer.
+ *
+ * It reduces encodings to just one and takes into account given RTP capabilities
+ * to reduce codecs, codecs' RTCP feedback and header extensions, and also enables
+ * or disables RTX.
+ */
+export function getConsumerRtpParameters(
+	{
+		consumableRtpParameters,
+		remoteRtpCapabilities,
+		pipe,
+		enableRtx
+	}:
+	{
+		consumableRtpParameters: RtpParameters;
+		remoteRtpCapabilities: RtpCapabilities;
+		pipe: boolean;
+		enableRtx: boolean;
+	}
+): RtpParameters
+{
+	const consumerParams: RtpParameters =
+	{
+		codecs           : [],
+		headerExtensions : [],
+		encodings        : [],
+		rtcp             : consumableRtpParameters.rtcp
+	};
+
+	for (const capCodec of remoteRtpCapabilities.codecs!)
+	{
+		validateRtpCodecCapability(capCodec);
+	}
+
+	const consumableCodecs =
+		(utils.clone(consumableRtpParameters.codecs) ?? []) as RtpCodecParameters[];
+
+	let rtxSupported = false;
+
+	for (const codec of consumableCodecs)
+	{
+		if (!enableRtx && isRtxCodec(codec))
+		{
+			continue;
+		}
+
+		const matchedCapCodec = remoteRtpCapabilities.codecs!
+			.find((capCodec) => matchCodecs(capCodec, codec, { strict: true }));
+
+		if (!matchedCapCodec)
+		{
+			continue;
+		}
+
+		codec.rtcpFeedback = matchedCapCodec.rtcpFeedback!
+			.filter((fb) => (
+				(enableRtx || fb.type !== 'nack' || fb.parameter)
+			));
+
+		consumerParams.codecs.push(codec);
+	}
+
+	// Must sanitize the list of matched codecs by removing useless RTX codecs.
+	for (let idx = consumerParams.codecs.length - 1; idx >= 0; --idx)
+	{
+		const codec = consumerParams.codecs[idx];
+
+		if (isRtxCodec(codec))
+		{
+			// Search for the associated media codec.
+			const associatedMediaCodec = consumerParams.codecs
+				.find((mediaCodec) => mediaCodec.payloadType === codec.parameters.apt);
+
+			if (associatedMediaCodec)
+			{
+				rtxSupported = true;
+			}
+			else
+			{
+				consumerParams.codecs.splice(idx, 1);
+			}
+		}
+	}
+
+	// Ensure there is at least one media codec.
+	if (consumerParams.codecs.length === 0 || isRtxCodec(consumerParams.codecs[0]))
+	{
+		throw new /*Unsupported*/Error('no compatible media codecs');
+	}
+
+	consumerParams.headerExtensions = consumableRtpParameters.headerExtensions!
+		.filter((ext) => (
+			remoteRtpCapabilities.headerExtensions!
+				.some((capExt) => (
+					capExt.preferredId === ext.id &&
+					capExt.uri === ext.uri
+				))
+		));
+
+	// Reduce codecs' RTCP feedback. Use Transport-CC if available, REMB otherwise.
+	if (
+		consumerParams.headerExtensions.some((ext) => (
+			ext.uri === 'http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01'
+		))
+	)
+	{
+		for (const codec of consumerParams.codecs)
+		{
+			codec.rtcpFeedback = codec.rtcpFeedback!
+				.filter((fb) => fb.type !== 'goog-remb');
+		}
+	}
+	else if (
+		consumerParams.headerExtensions.some((ext) => (
+			ext.uri === 'http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time'
+		))
+	)
+	{
+		for (const codec of consumerParams.codecs)
+		{
+			codec.rtcpFeedback = codec.rtcpFeedback!
+				.filter((fb) => fb.type !== 'transport-cc');
+		}
+	}
+	else
+	{
+		for (const codec of consumerParams.codecs)
+		{
+			codec.rtcpFeedback = codec.rtcpFeedback!
+				.filter((fb) => (
+					fb.type !== 'transport-cc' &&
+					fb.type !== 'goog-remb'
+				));
+		}
+	}
+
+	if (!pipe)
+	{
+		const consumerEncoding: RtpEncodingParameters =
+		{
+			ssrc : utils.generateRandomNumber()
+		};
+
+		if (rtxSupported)
+		{
+			consumerEncoding.rtx = { ssrc: consumerEncoding.ssrc! + 1 };
+		}
+
+		// If any of the consumableRtpParameters.encodings has scalabilityMode,
+		// process it (assume all encodings have the same value).
+		const encodingWithScalabilityMode =
+			consumableRtpParameters.encodings!.find((encoding) => encoding.scalabilityMode);
+
+		let scalabilityMode = encodingWithScalabilityMode
+			? encodingWithScalabilityMode.scalabilityMode
+			: undefined;
+
+		// If there is simulast, mangle spatial layers in scalabilityMode.
+		if (consumableRtpParameters.encodings!.length > 1)
+		{
+			const { temporalLayers } = parseScalabilityMode(scalabilityMode);
+
+			scalabilityMode = `L${consumableRtpParameters.encodings!.length}T${temporalLayers}`;
+		}
+
+		if (scalabilityMode)
+		{
+			consumerEncoding.scalabilityMode = scalabilityMode;
+		}
+
+		// Use the maximum maxBitrate in any encoding and honor it in the Consumer's
+		// encoding.
+		const maxEncodingMaxBitrate =
+			consumableRtpParameters.encodings!.reduce((maxBitrate, encoding) => (
+				encoding.maxBitrate && encoding.maxBitrate > maxBitrate
+					? encoding.maxBitrate
+					: maxBitrate
+			), 0);
+
+		if (maxEncodingMaxBitrate)
+		{
+			consumerEncoding.maxBitrate = maxEncodingMaxBitrate;
+		}
+
+		// Set a single encoding for the Consumer.
+		consumerParams.encodings!.push(consumerEncoding);
+	}
+	else
+	{
+		const consumableEncodings =
+			(utils.clone(consumableRtpParameters.encodings) ?? []) as RtpEncodingParameters[];
+		const baseSsrc = utils.generateRandomNumber();
+		const baseRtxSsrc = utils.generateRandomNumber();
+
+		for (let i = 0; i < consumableEncodings.length; ++i)
+		{
+			const encoding = consumableEncodings[i];
+
+			encoding.ssrc = baseSsrc + i;
+
+			if (rtxSupported)
+			{
+				encoding.rtx = { ssrc: baseRtxSsrc + i };
+			}
+			else
+			{
+				delete encoding.rtx;
+			}
+
+			consumerParams.encodings!.push(encoding);
+		}
+	}
+
+	return consumerParams;
 }
 
 /**
