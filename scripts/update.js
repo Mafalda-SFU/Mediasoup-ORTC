@@ -146,7 +146,13 @@ function isNotRustRelease({tag_name})
         else if(ts.isFunctionDeclaration(node))
         {
           if(functionIdentifiers.includes(node.name?.text))
-            content.push(node.getFullText(sourceFile));
+          {
+            let line = node.getFullText(sourceFile)
+
+            line = line.replaceAll('UnsupportedError', '/*Unsupported*/Error')
+
+            content.push(line);
+          }
         }
       });
 

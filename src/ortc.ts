@@ -99,7 +99,7 @@ export function generateRouterRtpCapabilities(
 		);
 
 		if (!matchedSupportedCodec) {
-			throw new UnsupportedError(
+			throw new /*Unsupported*/Error(
 				`media codec not supported [mimeType:${mediaCodec.mimeType}]`,
 			);
 		}
@@ -207,7 +207,7 @@ export function getProducerRtpParametersMapping(
 		);
 
 		if (!matchedCapCodec) {
-			throw new UnsupportedError(
+			throw new /*Unsupported*/Error(
 				`unsupported codec [mimeType:${codec.mimeType}, payloadType:${codec.payloadType}]`,
 			);
 		}
@@ -242,7 +242,7 @@ export function getProducerRtpParametersMapping(
 		);
 
 		if (!associatedCapRtxCodec) {
-			throw new UnsupportedError(
+			throw new /*Unsupported*/Error(
 				`no RTX codec for capability codec PT ${
 					capMediaCodec!.preferredPayloadType
 				}`,
@@ -501,7 +501,7 @@ export function getConsumerRtpParameters({
 		consumerParams.codecs.length === 0 ||
 		isRtxCodec(consumerParams.codecs[0])
 	) {
-		throw new UnsupportedError('no compatible media codecs');
+		throw new /*Unsupported*/Error('no compatible media codecs');
 	}
 
 	consumerParams.headerExtensions =
