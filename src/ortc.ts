@@ -1,6 +1,9 @@
 import * as h264 from 'h264-profile-level-id';
+
 import { supportedRtpCapabilities } from './supportedRtpCapabilities';
+
 import { parse as parseScalabilityMode } from '@mafalda-sfu/scalabilitymodes';
+
 import {
 	RtpCapabilities,
 	MediaKind,
@@ -11,7 +14,9 @@ import {
 	RtcpFeedback,
 	RtpEncodingParameters,
 } from './RtpParameters';
+
 import * as utils from './utils';
+
 
 export type RtpMapping = {
 	codecs: {
@@ -27,11 +32,13 @@ export type RtpMapping = {
 	}[];
 };
 
+
 const DynamicPayloadTypes = [
 	100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114,
 	115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 96, 97, 98,
 	99,
 ];
+
 
 /**
  * Validates RtpCapabilities. It may modify given data by adding missing
@@ -65,6 +72,7 @@ export function validateRtpCapabilities(caps: RtpCapabilities): void {
 		validateRtpHeaderExtension(ext);
 	}
 }
+
 
 /**
  * Generate RTP capabilities for the Router based on the given media codecs and
@@ -177,6 +185,7 @@ export function generateRouterRtpCapabilities(
 	return caps;
 }
 
+
 /**
  * Get a mapping of codec payloads and encodings of the given Producer RTP
  * parameters as values expected by the Router.
@@ -284,6 +293,7 @@ export function getProducerRtpParametersMapping(
 	return rtpMapping;
 }
 
+
 /**
  * Generate RTP parameters to be internally used by Consumers given the RTP
  * parameters of a Producer and the RTP capabilities of the Router.
@@ -390,6 +400,7 @@ export function getConsumableRtpParameters(
 	return consumableParams;
 }
 
+
 /**
  * Check whether the given RTP capabilities can consume the given Producer.
  */
@@ -421,6 +432,7 @@ export function canConsume(
 
 	return true;
 }
+
 
 /**
  * Generate RTP parameters for a specific Consumer.
@@ -618,6 +630,7 @@ export function getConsumerRtpParameters({
 	return consumerParams;
 }
 
+
 /**
  * Generate RTP parameters for a pipe Consumer.
  *
@@ -693,9 +706,11 @@ export function getPipeConsumerRtpParameters({
 	return consumerParams;
 }
 
+
 function isRtxCodec(codec: RtpCodecCapability | RtpCodecParameters): boolean {
 	return /.+\/rtx$/i.test(codec.mimeType);
 }
+
 
 function matchCodecs(
 	aCodec: RtpCodecCapability | RtpCodecParameters,
@@ -791,6 +806,7 @@ function matchCodecs(
 	return true;
 }
 
+
 /**
  * Validates RtpCodecCapability. It may modify given data by adding missing
  * fields with default values.
@@ -876,6 +892,7 @@ function validateRtpCodecCapability(codec: RtpCodecCapability): void {
 	}
 }
 
+
 /**
  * Validates RtcpFeedback. It may modify given data by adding missing
  * fields with default values.
@@ -896,6 +913,7 @@ function validateRtcpFeedback(fb: RtcpFeedback): void {
 		fb.parameter = '';
 	}
 }
+
 
 /**
  * Validates RtpHeaderExtension. It may modify given data by adding missing

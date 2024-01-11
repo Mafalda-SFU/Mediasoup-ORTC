@@ -1,9 +1,10 @@
+
+
 /**
  * The RTP capabilities define what mediasoup or an endpoint can receive at
  * media level.
  */
-export type RtpCapabilities =
-{
+export type RtpCapabilities = {
 	/**
 	 * Supported media and RTX codecs.
 	 */
@@ -15,10 +16,12 @@ export type RtpCapabilities =
 	headerExtensions?: RtpHeaderExtension[];
 };
 
+
 /**
  * Media kind ('audio' or 'video').
  */
 export type MediaKind = 'audio' | 'video';
+
 
 /**
  * Provides information on the capabilities of a codec within the RTP
@@ -37,8 +40,7 @@ export type MediaKind = 'audio' | 'video';
  * require preferredPayloadType field (if unset, mediasoup will choose a random
  * one). If given, make sure it's in the 96-127 range.
  */
-export type RtpCodecCapability =
-{
+export type RtpCodecCapability = {
 	/**
 	 * Media kind.
 	 */
@@ -78,10 +80,16 @@ export type RtpCodecCapability =
 	rtcpFeedback?: RtcpFeedback[];
 };
 
+
 /**
  * Direction of RTP header extension.
  */
-export type RtpHeaderExtensionDirection = 'sendrecv' | 'sendonly' | 'recvonly' | 'inactive';
+export type RtpHeaderExtensionDirection =
+	| 'sendrecv'
+	| 'sendonly'
+	| 'recvonly'
+	| 'inactive';
+
 
 /**
  * Provides information relating to supported header extensions. The list of
@@ -93,8 +101,7 @@ export type RtpHeaderExtensionDirection = 'sendrecv' | 'sendonly' | 'recvonly' |
  * router.rtpCapabilities or mediasoup.getSupportedRtpCapabilities()). It's
  * ignored if present in endpoints' RTP capabilities.
  */
-export type RtpHeaderExtension =
-{
+export type RtpHeaderExtension = {
 	/**
 	 * Media kind.
 	 */
@@ -124,6 +131,7 @@ export type RtpHeaderExtension =
 	 */
 	direction?: RtpHeaderExtensionDirection;
 };
+
 
 /**
  * The RTP send parameters describe a media stream received by mediasoup from
@@ -156,8 +164,7 @@ export type RtpHeaderExtension =
  * the associated producer. This applies even if the producer's encodings have
  * rid set.
  */
-export type RtpParameters =
-{
+export type RtpParameters = {
 	/**
 	 * The MID RTP extension value as defined in the BUNDLE specification.
 	 */
@@ -184,13 +191,13 @@ export type RtpParameters =
 	rtcp?: RtcpParameters;
 };
 
+
 /**
  * Provides information on codec settings within the RTP parameters. The list
  * of media codecs supported by mediasoup and their settings is defined in the
  * supportedRtpCapabilities.ts file.
  */
-export type RtpCodecParameters =
-{
+export type RtpCodecParameters = {
 	/**
 	 * The codec MIME media type/subtype (e.g. 'audio/opus', 'video/VP8').
 	 */
@@ -225,14 +232,14 @@ export type RtpCodecParameters =
 	rtcpFeedback?: RtcpFeedback[];
 };
 
+
 /**
  * Provides information on RTCP feedback messages for a specific codec. Those
  * messages can be transport layer feedback messages or codec-specific feedback
  * messages. The list of RTCP feedbacks supported by mediasoup is defined in the
  * supportedRtpCapabilities.ts file.
  */
-export type RtcpFeedback =
-{
+export type RtcpFeedback = {
 	/**
 	 * RTCP feedback type.
 	 */
@@ -244,12 +251,12 @@ export type RtcpFeedback =
 	parameter?: string;
 };
 
+
 /**
  * Provides information relating to an encoding, which represents a media RTP
  * stream and its associated RTX stream (if any).
  */
-export type RtpEncodingParameters =
-{
+export type RtpEncodingParameters = {
 	/**
 	 * The media SSRC.
 	 */
@@ -293,18 +300,20 @@ export type RtpEncodingParameters =
 	maxBitrate?: number;
 };
 
+
 export type RtpHeaderExtensionUri =
-    'urn:ietf:params:rtp-hdrext:sdes:mid' |
-    'urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id' |
-    'urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id' |
-    'http://tools.ietf.org/html/draft-ietf-avtext-framemarking-07' |
-    'urn:ietf:params:rtp-hdrext:framemarking' |
-    'urn:ietf:params:rtp-hdrext:ssrc-audio-level' |
-    'urn:3gpp:video-orientation' |
-    'urn:ietf:params:rtp-hdrext:toffset' |
-    'http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01' |
-    'http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time' |
-    'http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time';
+	| 'urn:ietf:params:rtp-hdrext:sdes:mid'
+	| 'urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id'
+	| 'urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id'
+	| 'http://tools.ietf.org/html/draft-ietf-avtext-framemarking-07'
+	| 'urn:ietf:params:rtp-hdrext:framemarking'
+	| 'urn:ietf:params:rtp-hdrext:ssrc-audio-level'
+	| 'urn:3gpp:video-orientation'
+	| 'urn:ietf:params:rtp-hdrext:toffset'
+	| 'http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01'
+	| 'http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time'
+	| 'http://www.webrtc.org/experiments/rtp-hdrext/abs-capture-time';
+
 
 /**
  * Defines a RTP header extension within the RTP parameters. The list of RTP
@@ -314,8 +323,7 @@ export type RtpHeaderExtensionUri =
  * mediasoup does not currently support encrypted RTP header extensions and no
  * parameters are currently considered.
  */
-export type RtpHeaderExtensionParameters =
-{
+export type RtpHeaderExtensionParameters = {
 	/**
 	 * The URI of the RTP header extension, as defined in RFC 5285.
 	 */
@@ -337,6 +345,7 @@ export type RtpHeaderExtensionParameters =
 	parameters?: any;
 };
 
+
 /**
  * Provides information on RTCP settings within the RTP parameters.
  *
@@ -346,8 +355,7 @@ export type RtpHeaderExtensionParameters =
  *
  * mediasoup assumes reducedSize to always be true.
  */
-export type RtcpParameters =
-{
+export type RtcpParameters = {
 	/**
 	 * The Canonical Name (CNAME) used by RTCP (e.g. in SDES messages).
 	 */
