@@ -2,11 +2,16 @@
   "name": "@mafalda-sfu/mediasoup-ortc",
   "version": "3.13.14-0",
   "description": "ORTC helper functions extracted from Mediasoup",
-  "main": "lib/ortc.js",
+  "exports": {
+    ".": "./lib/ortc.js",
+    "./*": "./lib/*.js"
+  },
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "release": "scripts/release.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "update": "scripts/update.js"
   },
   "repository": {
     "type": "git",
@@ -27,11 +32,15 @@
   },
   "homepage": "https://mafalda.io/Mediasoup-ORTC",
   "dependencies": {
-    "@mafalda-sfu/scalabilitymodes": "^0.0.1",
+    "@mafalda-sfu/scalabilitymodes": "^3.13.16",
     "h264-profile-level-id": "^2.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.10.6",
+    "@npmcli/package-json": "^5.0.0",
+    "@types/node": "^20.10.8",
+    "semver": "^7.5.4",
+    "simple-git": "^3.22.0",
+    "tar-stream": "^3.1.6",
     "typescript": "^5.3.3"
   }
 }
