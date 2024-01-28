@@ -1,0 +1,30 @@
+name: schedule
+
+on:
+  schedule:
+  - cron: "30 0/4 * * *"
+
+jobs:
+  check_and_update:
+    uses: mafalda-sfu/workflows/.github/workflows/schedule.yml@v1
+
+    with:
+      destination-github-username: Mafalda-SFU
+      dependencies-update-latest: "@mafalda-sfu/* mediasoup"
+      destination-repository-name: Mafalda-SFU.github.io
+      reference-package-name: "@mafalda-sfu/scalabilitymodes"
+      update-script: scripts/update.js
+      user-email: bot@mafalda.io
+      user-name: Mafalda Bot
+
+      # Docs
+      docs-coverage_gistID: ${{ vars.DOCS_COVERAGE_GISTID }}
+
+      # Publish GitHub Packages Registry
+      gpr-npm-version_gistID: ${{ vars.GPR_NPM_VERSION_GISTID }}
+
+    secrets:
+      GIST_SECRET: ${{ secrets.GIST_SECRET }}
+      npm_token: ${{ secrets.npm_token }}
+      SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}

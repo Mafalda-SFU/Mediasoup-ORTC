@@ -8,10 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepare": "npm run build",
-    "release": "scripts/release.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "update": "scripts/update.js"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -36,10 +33,7 @@
     "h264-profile-level-id": "^2.0.0"
   },
   "devDependencies": {
-    "@npmcli/package-json": "^5.0.0",
     "@types/node": "^20.11.0",
-    "semver": "^7.5.4",
-    "simple-git": "^3.22.0",
     "tar-stream": "^3.1.6",
     "typescript": "^5.3.3"
   }
