@@ -14,7 +14,7 @@ const options = {force: true, recursive: true}
 const repo = 'versatica/mediasoup'
 
 
-const {argv: [,, version]} = process
+const {argv: [,, version]} = process;
 
 
 (async function()
