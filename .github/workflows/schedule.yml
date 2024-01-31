@@ -17,9 +17,6 @@ jobs:
       user-email: bot@mafalda.io
       user-name: Mafalda Bot
 
-      # Docs
-      docs-coverage_gistID: ${{ vars.DOCS_COVERAGE_GISTID }}
-
       # Publish GitHub Packages Registry
       gpr-npm-version_gistID: ${{ vars.GPR_NPM_VERSION_GISTID }}
 
