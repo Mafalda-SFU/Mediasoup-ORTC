@@ -1,6 +1,6 @@
 {
   "name": "@mafalda-sfu/mediasoup-ortc",
-  "version": "3.14.4",
+  "version": "3.14.5",
   "description": "ORTC helper functions extracted from Mediasoup",
   "exports": {
     ".": "./lib/ortc.js",
@@ -29,7 +29,7 @@
   },
   "homepage": "https://mafalda.io/Mediasoup-ORTC",
   "dependencies": {
-    "@mafalda-sfu/scalabilitymodes": "^3.14.4",
+    "@mafalda-sfu/scalabilitymodes": "^3.14.5",
     "h264-profile-level-id": "^2.0.0"
   },
   "devDependencies": {
