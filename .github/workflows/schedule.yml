@@ -12,7 +12,7 @@ jobs:
       destination-github-username: Mafalda-SFU
       dependencies-update-latest: "@mafalda-sfu/* mediasoup"
       destination-repository-name: Mafalda-SFU.github.io
-      reference-package-name: "@mafalda-sfu/scalabilitymodes"
+      reference-package-name: "@mafalda-sfu/scalabilitymodesutils"
       update-script: scripts/update.js
       user-email: bot@mafalda.io
       user-name: Mafalda Bot

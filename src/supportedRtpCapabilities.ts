@@ -1,4 +1,4 @@
-import { RtpCapabilities } from './RtpParameters';
+import type { RtpCapabilities } from './rtpParametersTypes';
 
 const supportedRtpCapabilities: RtpCapabilities = {
 	codecs: [

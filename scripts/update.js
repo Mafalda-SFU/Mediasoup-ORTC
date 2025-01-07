@@ -68,8 +68,8 @@ ok(version, 'version is required');
       const importIdentifiers = [
         'h264-profile-level-id',
         './supportedRtpCapabilities',
-        './scalabilityModes',
-        './RtpParameters',
+        './scalabilityModesUtils',
+        './rtpParametersTypes',
         './utils'
       ]
       const functionIdentifiers = [
@@ -96,12 +96,12 @@ ok(version, 'version is required');
           {
             let line = node.getFullText(sourceFile)
 
-            if(line.includes('./scalabilityModes'))
+            if(line.includes('./scalabilityModesUtils'))
               line = line.replace(
-                './scalabilityModes', '@mafalda-sfu/scalabilitymodes'
+                './scalabilityModesUtils', '@mafalda-sfu/scalabilitymodesutils'
               )
 
-            else if(line.includes('./RtpParameters'))
+            else if(line.includes('./rtpParametersTypes'))
               line = line.replace(
                 '\n\tRtpHeaderExtensionParameters,\n\tRtcpParameters,', ''
               )
@@ -112,7 +112,7 @@ ok(version, 'version is required');
 
         else if(ts.isTypeAliasDeclaration(node))
         {
-          if(node.name?.text === 'RtpMapping')
+          if(node.name?.text === 'RtpCodecsEncodingsMapping')
             content.push(node.getFullText(sourceFile));
         }
 
@@ -141,7 +141,7 @@ ok(version, 'version is required');
       continue
     }
 
-    if(path === 'node/src/RtpParameters.ts')
+    if(path === 'node/src/rtpParametersTypes.ts')
     {
       path = path.split(sep)
       path.shift()

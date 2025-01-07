@@ -2,9 +2,9 @@ import * as h264 from 'h264-profile-level-id';
 
 import { supportedRtpCapabilities } from './supportedRtpCapabilities';
 
-import { parse as parseScalabilityMode } from '@mafalda-sfu/scalabilitymodes';
+import { parseScalabilityMode } from '@mafalda-sfu/scalabilitymodesutils';
 
-import {
+import type {
 	RtpCapabilities,
 	MediaKind,
 	RtpCodecCapability,
@@ -13,17 +13,16 @@ import {
 	RtpCodecParameters,
 	RtcpFeedback,
 	RtpEncodingParameters,
-} from './RtpParameters';
+} from './rtpParametersTypes';
 
 import * as utils from './utils';
 
 
-export type RtpMapping = {
+export type RtpCodecsEncodingsMapping = {
 	codecs: {
 		payloadType: number;
 		mappedPayloadType: number;
 	}[];
-
 	encodings: {
 		ssrc?: number;
 		rid?: string;
@@ -195,8 +194,8 @@ export function generateRouterRtpCapabilities(
 export function getProducerRtpParametersMapping(
 	params: RtpParameters,
 	caps: RtpCapabilities
-): RtpMapping {
-	const rtpMapping: RtpMapping = {
+): RtpCodecsEncodingsMapping {
+	const rtpMapping: RtpCodecsEncodingsMapping = {
 		codecs: [],
 		encodings: [],
 	};
@@ -302,7 +301,7 @@ export function getConsumableRtpParameters(
 	kind: string,
 	params: RtpParameters,
 	caps: RtpCapabilities,
-	rtpMapping: RtpMapping
+	rtpMapping: RtpCodecsEncodingsMapping
 ): RtpParameters {
 	const consumableParams: RtpParameters = {
 		codecs: [],
