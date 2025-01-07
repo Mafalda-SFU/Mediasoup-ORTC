@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const {ok} = require('node:assert');
 const {mkdir, rm, writeFile} = require('node:fs/promises');
 const {sep} = require('node:path');
 const {Readable} = require('node:stream');
@@ -17,15 +18,20 @@ const repo = 'versatica/mediasoup'
 const {argv: [,, version]} = process;
 
 
+ok(version, 'version is required');
+
+
 (async function()
 {
-  const [{body}] = await Promise.all([
+  const [response] = await Promise.all([
     fetch(`https://api.github.com/repos/${repo}/tarball/${version}`),
     rm('src', options)
     .then(mkdir.bind(null, 'src', options))
   ])
 
-  const extract = Readable.fromWeb(body).pipe(createGunzip()).pipe(tar.extract())
+  ok(response.ok, response.statusText)
+
+  const extract = Readable.fromWeb(response.body).pipe(createGunzip()).pipe(tar.extract())
 
   for await (const entry of extract)
   {
