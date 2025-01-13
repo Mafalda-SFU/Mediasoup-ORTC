@@ -15,10 +15,31 @@ const options = {force: true, recursive: true}
 const repo = 'versatica/mediasoup'
 
 
-const {argv: [,, version]} = process;
-
+let {argv: [,, version]} = process;
 
 ok(version, 'version is required');
+
+// If version is a pre-release, get the previous version
+if(version.includes('-'))
+{
+  let [major, minor, patch] = version.split('-')[0].split('.')
+
+  patch = parseInt(patch)
+  if(patch) patch -= 1
+  else
+  {
+    minor = parseInt(minor)
+    if(minor) minor -= 1
+    else
+    {
+      major = parseInt(major)
+      ok(major, 'Invalid version')
+      major -= 1
+    }
+  }
+
+  version = `${major}.${minor}.${patch}`
+}
 
 
 (async function()
