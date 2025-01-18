@@ -64,6 +64,7 @@ if(version.includes('-'))
 
     if(
       path === 'node/tsconfig.json' ||
+      path === 'node/src/errors.ts' ||
       path === 'node/src/supportedRtpCapabilities.ts'
     ) {
       path = path.split(sep)
@@ -88,6 +89,7 @@ if(version.includes('-'))
 
       const importIdentifiers = [
         'h264-profile-level-id',
+        './errors',
         './supportedRtpCapabilities',
         './scalabilityModesUtils',
         './rtpParametersTypes',
@@ -146,13 +148,7 @@ if(version.includes('-'))
         else if(ts.isFunctionDeclaration(node))
         {
           if(functionIdentifiers.includes(node.name?.text))
-          {
-            let line = node.getFullText(sourceFile)
-
-            line = line.replaceAll('UnsupportedError', '/*Unsupported*/Error')
-
-            content.push(line);
-          }
+            content.push(node.getFullText(sourceFile));
         }
       });
 
