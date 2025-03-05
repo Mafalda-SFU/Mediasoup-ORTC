@@ -22,6 +22,6 @@ jobs:
 
     secrets:
       GIST_SECRET: ${{ secrets.GIST_SECRET }}
-      npm_token: ${{ secrets.npm_token }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
