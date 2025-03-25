@@ -379,8 +379,8 @@ export function getConsumableRtpParameters(
 		utils.clone<RtpEncodingParameters[] | undefined>(params.encodings) ?? [];
 
 	for (let i = 0; i < consumableEncodings.length; ++i) {
-		const consumableEncoding = consumableEncodings[i];
-		const { mappedSsrc } = rtpMapping.encodings[i];
+		const consumableEncoding = consumableEncodings[i]!;
+		const { mappedSsrc } = rtpMapping.encodings[i]!;
 
 		// Remove useless fields.
 		delete consumableEncoding.rid;
@@ -427,7 +427,7 @@ export function canConsume(
 	}
 
 	// Ensure there is at least one media codec.
-	if (matchingCodecs.length === 0 || isRtxCodec(matchingCodecs[0])) {
+	if (matchingCodecs.length === 0 || isRtxCodec(matchingCodecs[0]!)) {
 		return false;
 	}
 
@@ -493,7 +493,7 @@ export function getConsumerRtpParameters({
 
 	// Must sanitize the list of matched codecs by removing useless RTX codecs.
 	for (let idx = consumerParams.codecs.length - 1; idx >= 0; --idx) {
-		const codec = consumerParams.codecs[idx];
+		const codec = consumerParams.codecs[idx]!;
 
 		if (isRtxCodec(codec)) {
 			// Search for the associated media codec.
@@ -512,7 +512,7 @@ export function getConsumerRtpParameters({
 	// Ensure there is at least one media codec.
 	if (
 		consumerParams.codecs.length === 0 ||
-		isRtxCodec(consumerParams.codecs[0])
+		isRtxCodec(consumerParams.codecs[0]!)
 	) {
 		throw new UnsupportedError('no compatible media codecs');
 	}
@@ -613,7 +613,7 @@ export function getConsumerRtpParameters({
 		const baseRtxSsrc = utils.generateRandomNumber();
 
 		for (let i = 0; i < consumableEncodings.length; ++i) {
-			const encoding = consumableEncodings[i];
+			const encoding = consumableEncodings[i]!;
 
 			encoding.ssrc = baseSsrc + i;
 
@@ -690,7 +690,7 @@ export function getPipeConsumerRtpParameters({
 	const baseRtxSsrc = utils.generateRandomNumber();
 
 	for (let i = 0; i < consumableEncodings.length; ++i) {
-		const encoding = consumableEncodings[i];
+		const encoding = consumableEncodings[i]!;
 
 		encoding.ssrc = baseSsrc + i;
 
@@ -831,7 +831,7 @@ function validateRtpCodecCapability(codec: RtpCodecCapability): void {
 	}
 
 	// Just override kind with media component of mimeType.
-	codec.kind = mimeTypeMatch[1].toLowerCase() as MediaKind;
+	codec.kind = mimeTypeMatch[1]!.toLowerCase() as MediaKind;
 
 	// preferredPayloadType is optional.
 	if (
