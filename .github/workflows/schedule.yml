@@ -2,7 +2,7 @@ name: schedule
 
 on:
   schedule:
-  - cron: "20 0/6 * * *"
+  - cron: "30 0/6 * * *"
 
 jobs:
   check_and_update:
