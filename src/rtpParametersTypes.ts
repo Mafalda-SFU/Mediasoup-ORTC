@@ -1,4 +1,10 @@
 /**
+ * Media kind ('audio' or 'video').
+ */
+export type MediaKind = 'audio' | 'video';
+
+
+/**
  * The RTP capabilities define what mediasoup or an endpoint can receive at
  * media level.
  */
@@ -16,9 +22,12 @@ export type RtpCapabilities = {
 
 
 /**
- * Media kind ('audio' or 'video').
+ * Special RtpCapabilities for `supportedRtpCapabilities` in which `codecs`
+ * is an array of RouterRtpCodecCapability.
  */
-export type MediaKind = 'audio' | 'video';
+export type RouterRtpCapabilities = Omit<RtpCapabilities, 'codecs'> & {
+	codecs?: RouterRtpCodecCapability[];
+};
 
 
 /**
@@ -51,8 +60,11 @@ export type RtpCodecCapability = {
 
 	/**
 	 * The preferred RTP payload type.
+	 *
+	 * NOTE: Despite it's a mandatory field, it's optional in `mediaCodecs` of
+	 * RouterOptions.
 	 */
-	preferredPayloadType?: number;
+	preferredPayloadType: number;
 
 	/**
 	 * Codec clock rate expressed in Hertz.
@@ -70,12 +82,24 @@ export type RtpCodecCapability = {
 	 * and 'profile-level-id' in H264 or 'profile-id' in VP9) are critical for
 	 * codec matching.
 	 */
-	parameters?: any;
+	parameters?: Record<string, unknown>;
 
 	/**
 	 * Transport layer and codec-specific feedback messages for this codec.
 	 */
 	rtcpFeedback?: RtcpFeedback[];
+};
+
+
+/**
+ * Special RtpCodecCapability for RouterOptions in which `preferredPayloadType`
+ * is optional.
+ */
+export type RouterRtpCodecCapability = Omit<
+	RtpCodecCapability,
+	'preferredPayloadType'
+> & {
+	preferredPayloadType?: number;
 };
 
 
@@ -222,7 +246,7 @@ export type RtpCodecParameters = {
 	 * as 'packetization-mode' and 'profile-level-id' in H264 or 'profile-id' in
 	 * VP9) are critical for codec matching.
 	 */
-	parameters?: any;
+	parameters?: Record<string, unknown>;
 
 	/**
 	 * Transport layer and codec-specific feedback messages for this codec.
@@ -292,9 +316,8 @@ export type RtpEncodingParameters = {
 	scalabilityMode?: string;
 
 	/**
-	 * Others.
+	 * Maximum bitrate (bps) announced for this stream.
 	 */
-	scaleResolutionDownBy?: number;
 	maxBitrate?: number;
 };
 
@@ -340,7 +363,7 @@ export type RtpHeaderExtensionParameters = {
 	/**
 	 * Configuration parameters for the header extension.
 	 */
-	parameters?: any;
+	parameters?: Record<string, unknown>;
 };
 
 
